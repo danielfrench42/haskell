@@ -1,14 +1,9 @@
 --Daniel French
--- Homework 2
+--Homework 2
 
 data Circuit = Both Gates Links
-     -- deriving Show
-
 
 data Gates = A IntA GateFn Gates
-               | O IntO GateFn Gates 
-               | X IntX GateFn Gates 
-               | N IntN GateFn Gates
                | None
 
 type IntA = Int
@@ -16,9 +11,7 @@ type IntO = Int
 type IntX = Int
 type IntN = Int
 
-
 data GateFn = And | Or | Xor | Not
-          deriving Show
 
 data Links = To One Two Three Four Links
                | None'
@@ -33,18 +26,18 @@ instance Show Circuit where
 
 instance Show Gates where
      show (A num gate gateF2) = show num++":"++show gate++";\n"++show gateF2  
-     show (O num gate gateF2) = show num++":"++show gate++";\n"++show gateF2
-     show (X num gate gateF2) = show num++":"++show gate++";\n"++show gateF2
-     show (N num gate gateF2) = show num++":"++show gate++";\n"++show gateF2
      show (None) = ""
 
 
--- instance Show GateFn where
+instance Show GateFn where
+     show (And) = "and"
+     show (Or) = "or"
+     show (Xor) = "xor"
+     show (Not) = "not"
 
 instance Show Links where
      show (To a b c d link2) = "from "++show a++"."++show b++" to "++show c++"."++show d++";\n"++show link2
      show None' = ""
-
 
 
 
@@ -53,20 +46,23 @@ instance Show Links where
 circ :: Circuit
 circ = Both gate1 link1 
 
--- gate :: Gates
--- gate =
-
 gate1 :: Gates
 gate1 = A 1 And gate2
 
 gate2 :: Gates
-gate2 = O 2 Or gate3
+gate2 = A 2 Or gate3
 
 gate3 :: Gates
 gate3 = None
 
+gateF1 :: GateFn
+gateF1 = And
+
 link1 :: Links
-link1 = To 1 2 3 4 link2
+link1 = To 1 1 2 1 link2
 
 link2 :: Links
-link2 = None'
+link2 = To 1 2 2 2 link3
+
+link3 :: Links
+link3 = None'
