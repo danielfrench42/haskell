@@ -6,16 +6,13 @@ data Circuit = Both Gates Links
 data Gates = A IntA GateFn Gates
                | None
 
-type IntA = Int
-type IntO = Int
-type IntX = Int
-type IntN = Int
 
 data GateFn = And | Or | Xor | Not
 
 data Links = To One Two Three Four Links
                | None'
 
+type IntA = Int
 type One = Int
 type Two = Int
 type Three = Int
@@ -25,7 +22,7 @@ instance Show Circuit where
      show (Both gate1 link1) = show gate1++show link1
 
 instance Show Gates where
-     show (A num gate gateF2) = show num++":"++show gate++";\n"++show gateF2  
+     show (A num gate gateF2) = show num++":"++show gate++";\n"++show gateF2 
      show (None) = ""
 
 
@@ -36,7 +33,7 @@ instance Show GateFn where
      show (Not) = "not"
 
 instance Show Links where
-     show (To a b c d link2) = "from "++show a++"."++show b++" to "++show c++"."++show d++";\n"++show link2
+     show (To a b c d e) = "from "++show a++"."++show b++" to "++show c++"."++show d++";\n"++show e
      show None' = ""
 
 
