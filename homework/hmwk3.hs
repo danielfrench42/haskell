@@ -1,14 +1,12 @@
-module Hw3 where
-
--- type Prog = [Cmd]
--- data Cmd = LD Int
---       | ADD
---       | MULT
---       | DUP
---       deriving Show
--- type Stack = [Int]
---          -- deriving Show
--- type D = Maybe Stack -> Maybe
+type Prog = [Cmd]
+data Cmd = LD Int
+      | ADD
+      | MULT
+      | DUP
+      deriving Show
+type Stack = [Int]
+         --deriving Show
+type D = [Int] -> [Int]
 
 -- sem :: Prog -> D
 -- sem [] = (\ s -> s) --Do nothing so the stack can be given input arguments
@@ -25,10 +23,29 @@ module Hw3 where
 -- in2 = [LD 3, ADD]
 -- in3 = []
 
+semCmd :: Cmd -> Maybe Stack -> Maybe Stack
+semCmd (LD i) (Just s)          = Just (i:s)
+semCmd DUP    (Just vs@(v:_))   = Just (v:vs)
+semCmd ADD    (Just (v1:v2:vs)) = Just (v1+v2:vs)
+semCmd MULT   (Just (v1:v2:vs)) = Just (v1*v2:vs)
+semCmd _      _                 = Nothing
+
+sem :: Prog -> Maybe Stack -> Maybe Stack:
+sem []     s = s
+sem (c:cs) s = sem cs (semCmd c s)
+
+tst1 = [LD 3, DUP, ADD, DUP, MULT]
+tst2 = []::Prog
+err1 = [LD 3, ADD]
+err2 = [LD 3, MULT]
+err3 = [DUP]
+tests  = [tst1,      tst2,    err1,    err2,    err3]
+expect = [Just [36], Just [], Nothing, Nothing, Nothing]
+test = map (\p->sem p (Just [])) tests == expect
 
 
 
-
+--Exercise 2
 data Cmd' = Pen Mode
          | MoveTo Int Int
          | Seq Cmd' Cmd'
@@ -52,9 +69,10 @@ semS (MoveTo x y) (Down,a,b)  = ((Down,x,y),[(a,b,x,y)])
 semS (Seq c m)    state       = (secState,combine lineOne lineTwo)
                                  where  (secState,lineTwo) = semS m state
                                         (firState,lineOne) = semS c secState
-                                      
+            
 combine :: Lines -> Lines -> Lines
 combine a b = a++b 
+                          
 
 sem' :: Cmd' -> Lines
 sem' x = snd(semS x (Up,0,0))
